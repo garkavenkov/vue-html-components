@@ -21,7 +21,8 @@ export default {
         },
         pagination: {
             type: Object,
-            required: false
+            required: false,
+            default: () => ({})
         },
         fields: {
             type: Array,
@@ -146,12 +147,12 @@ export default {
                 this.currentPage = this.pagesCount;
             }
         },
-        'pagination.current_page'(newValue, oldValue) {
+        'pagination.current_page'(newValue) {
             if (newValue) {
                 this.currentPage = newValue;
             }
         },
-        'pagination.per_page'(newValue, oldValue) {
+        'pagination.per_page'(newValue) {
             if (newValue) {
                 this.perPage = newValue;
             }
@@ -189,7 +190,7 @@ export default {
                 <td class="lead text-center" :colspan="fields.length+1">
                     No data found
                 </td>
-            </tr>
+            </tr>l
             <tr v-else 
                 v-for="(data,index) in paginatedData"
                 v-bind:class="[index % 2 === 0 ? 'odd' : 'even']"
