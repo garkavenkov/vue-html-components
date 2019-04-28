@@ -37,8 +37,7 @@ export default {
             <label v-bind:for="id">
                 <slot></slot>
             </label>
-            <input  v-if="orientation == 'right'"
-                    type="checkbox"                 
+            <input  type="checkbox"                 
                     v-bind:checked="checked"
                     v-bind:id="id"
                     @change="$emit('change', $event.target.checked)">
