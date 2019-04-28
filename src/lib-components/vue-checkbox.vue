@@ -7,6 +7,11 @@ export default {
     },
     props: {
         checked: Boolean,
+        orientation: {
+            type: String,
+            required: false,
+            default: 'left'
+        },
         id: {
             type: String,
             required: false,
@@ -18,13 +23,27 @@ export default {
 
 <template>
     <div class="vue-checkbox">
-        <input  type="checkbox"                 
-                v-bind:checked="checked"
-                v-bind:id="id"
-                @change="$emit('change', $event.target.checked)">
-        <label v-bind:for="id">
-            <slot></slot>
-        </label>
+        <template v-if="orientation == 'left'">
+            <input  type="checkbox"                 
+                    v-bind:checked="checked"
+                    v-bind:id="id"
+                    @change="$emit('change', $event.target.checked)">
+            <label v-bind:for="id">
+                <slot></slot>
+                <slot name="info"></slot>
+            </label>
+        </template>
+        <template v-if="orientation =='right'">
+            <label v-bind:for="id">
+                <slot></slot>
+            </label>
+            <input  v-if="orientation == 'right'"
+                    type="checkbox"                 
+                    v-bind:checked="checked"
+                    v-bind:id="id"
+                    @change="$emit('change', $event.target.checked)">
+                    <span><slot name="info"></slot></span>
+        </template>
     </div>
 </template>
 

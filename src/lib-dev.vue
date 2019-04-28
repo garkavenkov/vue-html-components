@@ -8,6 +8,7 @@ export default {
             suppliers: {
                 active: true
             },
+            orientation: "right",
             fields: [
                 {
                     name: 'id',
@@ -95,6 +96,9 @@ export default {
         },
         makePagination(links, meta) {
             this.pagination = {...links, ...meta}
+        },
+        change() {
+
         }
 
     },
@@ -110,17 +114,21 @@ export default {
 
 <template>
     <div class="vue-html-components-lib-dev">
-        <button @click="fetchData">Fetch</button>
-        <!-- <vue-checkbox v-model="suppliers.active"
+         <vue-checkbox v-model="suppliers.active"
+                        :orientation="orientation"
                         id="supplier-status"
                         @change="change()">
-            <template v-if="suppliers.active">
-                Status: work    
+                Status
+            <template v-if="suppliers.active" v-slot:info>
+                work    
             </template>
-            <template v-else>
-                Status: doesn't work
+            <template v-else v-slot:info>
+                doesn't work
             </template>            
-        </vue-checkbox> -->
+        </vue-checkbox>
+
+        <button @click="fetchData">Fetch</button>
+       
         <vue-datatable  :fields="fields"
                         :dataTable="dataTable"
                         :pagination="pagination"

@@ -190,7 +190,7 @@ export default {
                 <td class="lead text-center" :colspan="fields.length+1">
                     No data found
                 </td>
-            </tr>l
+            </tr>
             <tr v-else 
                 v-for="(data,index) in paginatedData"
                 v-bind:class="[index % 2 === 0 ? 'odd' : 'even']"
