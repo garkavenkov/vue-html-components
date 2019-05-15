@@ -25,7 +25,7 @@ export default {
             default: () => ({})
         },
         fields: {
-            type: Array,
+            type: Object,
             required: true
         },
         dataTable: {
@@ -83,6 +83,9 @@ export default {
             } else {
                 this.currentPage = page;
             }            
+        },  
+        generateLink(action, id) {
+            return action.url.replace(/{.+}/, id);
         }
     },
     computed: {
@@ -181,37 +184,47 @@ export default {
     </div>
     <table class="vue--table">
         <thead class="vue--table_header">
-            <th v-for="(field, index) in fields" :key="index">
-                {{field.caption}}
+            <th v-for="(field, index) in fields.header" :key="index">
+                {{field.text}}
             </th>
         </thead>
         <tbody class="vue--table_body">
             <tr v-if="dataTable.length===0">
-                <td class="lead text-center" :colspan="fields.length+1">
+                <td class="lead text-center" :colspan="fields.header.length+1">
                     No data found
                 </td>
             </tr>
-            <tr v-else 
+            <tr v-else
                 v-for="(data,index) in paginatedData"
                 v-bind:class="[index % 2 === 0 ? 'odd' : 'even']"
                 :key="data.id">
-                <td v-for="(field, index) in fields" :key="index">
-                    <template v-if="field.link">
-                        <template v-if="field.link.type==='vue-router'">
-                            <router-link :to="field.link.url+data[field.link.id]">{{data[field.name]}}</router-link>    
+                    <td v-for="(field, index) in $parent.fields.body" :key="index" v-bind:class="field.class">
+                        <template v-if="field.type === 'field'">
+                            {{data[field.name]}}
                         </template>
-                        <template v-else>
-                            <a v-bind:href="field.link.url+data[field.link.id]">{{data[field.name]}}</a>
+                        <template v-if="field.type === 'link'">
+                            <template v-if="field.link === 'vue-router'">
+                                <router-link :to="field.url+data[field.id]">{{data[field.name]}}</router-link>    
+                            </template>
+                            <template v-else>
+                                <a v-bind:href="field.url+data[field.id]">{{data[field.name]}}</a>
+                            </template>
                         </template>
-                    </template>                    
-                    <template v-else>
-                        {{data[field.name]}}    
-                    </template>                            
-                </td>
+                        <template v-if="field.type === 'action'">
+                            <template v-for="(action, index) in field.actions">
+                                <template v-if="action.type === 'callback'">
+                                    <button v-bind:class="action.class" @click="$emit(action.function, data[action.id])" :key="index" v-html="action.text"></button>
+                                </template>
+                                <template v-if="action.type === 'link'">
+                                    <a :href="generateLink(action, data[action.id])" v-bind:class="action.class" :key="index">{{action.text}}</a>
+                                </template>
+                            </template>
+                        </template>
+                    </td>              
             </tr>
         </tbody>
         <tfoot class="vue--table_footer">
-
+            <slot></slot>
         </tfoot>
 
     </table>
