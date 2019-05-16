@@ -84,6 +84,15 @@ export default {
                 this.currentPage = page;
             }            
         },  
+        generateCell(value, field) {
+            if (field.filter) {
+                let params = field.filter.split(':')
+                let filter = params.shift();
+                return this.$parent.$options.filters[filter](value, ...params);
+            } else {                
+                return value;
+            }
+        },
         generateLink(action, id) {
             return action.url.replace(/{.+}/, id);
         }
@@ -200,7 +209,8 @@ export default {
                 :key="data.id">
                     <td v-for="(field, index) in $parent.fields.body" :key="index" v-bind:class="field.class">
                         <template v-if="field.type === 'field'">
-                            {{data[field.name]}}
+                            {{generateCell(data[field.name], field)}}
+                            <!-- {{data[field.name] }} -->
                         </template>
                         <template v-if="field.type === 'link'">
                             <template v-if="field.link === 'vue-router'">

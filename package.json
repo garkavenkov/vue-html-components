@@ -1,6 +1,6 @@
 {
   "name": "@maksim.garkavenkov/vue-html-components",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "",
   "private": false,
   "main": "dist/vue-html-components.umd.js",

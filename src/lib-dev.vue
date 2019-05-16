@@ -1,6 +1,7 @@
 <script>
 import { VueCheckbox, VueDatatable} from './entry';
 import axios from 'axios';
+import { delimiter } from 'path';
 export default {
     name:  'VueHtmlComponentsLibDev', // vue library dev component
     data() {
@@ -26,43 +27,7 @@ export default {
             //     {
             //         name: 'name',
             //         caption: 'Name',                  
-            //     },                
-
-            // ],
-            // fields: [
-            //     {
-            //         caption: '#',
-            //         name: 'id',                    
             //     },
-            //     {
-            //         name: 'date',
-            //         caption: 'Дата'
-            //     },
-            //     {
-            //         name: 'number',
-            //         caption: '№'
-            //     },
-            //     {
-            //         name: 'supplier',
-            //         caption: 'Поставщик'
-            //     },
-            //     {
-            //         name: 'department',
-            //         caption: 'Отдел'
-            //     },
-            //     {
-            //         name: 'sum1',
-            //         caption: 'Сумма закупки',
-            //         class: ['text-right']
-            //     },
-            //     {
-            //         name: 'sum2',
-            //         caption: 'Сумма продажи',
-            //     },
-            //     {
-            //         name: 'trade_margin',
-            //         caption: 'Торговая наценка',
-            //     },                
             // ],
             fields: {
                 header: [
@@ -78,13 +43,13 @@ export default {
                 ],
                 body: [
                     { type: 'link',  link: 'native', url: 'income-documents/', id: 'id', name: 'id'},
-                    { type: 'field', name: 'date', filter: 'date' },
+                    { type: 'field', name: 'date' },
                     { type: 'field', name: 'number' },
                     { type: 'field', name: 'supplier' },
                     { type: 'field', name: 'department' },
-                    { type: 'field', name: 'sum1',         filter : 'formatNumber', class: 'number' },
-                    { type: 'field', name: 'sum2',         filter : 'formatNumber', class: 'number' },
-                    { type: 'field', name: 'trade_margin', filter : 'formatNumber', class: 'number' },
+                    { type: 'field', name: 'sum1',         filter : 'formatNumber:2', class: 'number' },
+                    { type: 'field', name: 'sum2',         filter : 'formatNumber:2', class: 'number' },
+                    { type: 'field', name: 'trade_margin'},
                     { type: 'action', actions: [
                         {
                             type: 'callback',
@@ -158,6 +123,29 @@ export default {
                 // },
             ]
         }
+    },
+    filters: {
+        formatNumber(value, precision=2, delimeter=' ') {
+            var int_part = Math.trunc(value).toString();
+            var float_part = (value - Math.trunc(value)).toFixed(precision)
+            
+            var int_part_length = int_part.length;
+            
+            let final = '';
+            
+            while(int_part_length > 2) {
+                var part = int_part.substr(int_part_length-3, 3)
+            
+                int_part = int_part.slice(0, int_part_length-3 )
+                int_part_length = int_part.length
+                final = part + delimeter + final
+            }
+            
+            final = int_part+ delimeter + final
+            final = final.slice(0,-1)+'.'+ float_part.substring(2)
+            return final;
+        }     
+
     },
     methods: {
         fetchData(url) {
