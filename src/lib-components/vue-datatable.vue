@@ -108,7 +108,11 @@ export default {
             if (this.pagination.hasOwnProperty('from')) {
                 return this.pagination.from-1;
             } else {
-                return this.perPage === "all" ? 0 : (this.currentPage-1) * this.perPage;
+                if (this.perPage === "all" || this.dataTableLenght == 0) {
+                    return 0;
+                } else {
+                    return (this.currentPage-1) * this.perPage
+                }
             }            
         },
         paginateTo() {
